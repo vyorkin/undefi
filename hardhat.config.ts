@@ -12,14 +12,19 @@ import "solidity-coverage";
 
 dotenv.config();
 
-const { ROPSTEN_URL, RINKEBY_URL, MAINNET_URL, PRIVATE_KEY, ETHERSCAN_API_KEY } = process.env;
+const {
+  ROPSTEN_URL,
+  RINKEBY_URL,
+  MAINNET_URL,
+  PRIVATE_KEY,
+  ETHERSCAN_API_KEY,
+} = process.env;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     hardhat: {
       forking: {
-        enabled: true,
         url: MAINNET_URL!,
       },
     },
