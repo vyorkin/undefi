@@ -16,7 +16,8 @@ const {
   ROPSTEN_URL,
   RINKEBY_URL,
   MAINNET_URL,
-  PRIVATE_KEY,
+  ACCOUNT1_ADDRESS,
+  ACCOUNT1_PRIVATE_KEY,
   ETHERSCAN_API_KEY,
 } = process.env;
 
@@ -30,11 +31,11 @@ const config: HardhatUserConfig = {
     },
     ropsten: {
       url: ROPSTEN_URL!,
-      accounts: [PRIVATE_KEY!],
+      accounts: [ACCOUNT1_PRIVATE_KEY!],
     },
     rinkeby: {
       url: RINKEBY_URL!,
-      accounts: [PRIVATE_KEY!],
+      accounts: [ACCOUNT1_PRIVATE_KEY!],
     },
   },
   gasReporter: {
@@ -46,7 +47,7 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: 0,
-    user: 1,
+    user: ACCOUNT1_ADDRESS!,
   },
   typechain: {
     outDir: "typechain",
