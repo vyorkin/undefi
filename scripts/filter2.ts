@@ -1,14 +1,7 @@
-
 import { ethers, network } from "hardhat";
 import { Token } from "../typechain/Token";
 
-const { ROPSTEN_URL, ACCOUNT2_ADDRESS } = process.env;
-
 const MNEMONIC = "curious tuition pig century panic believe item more warfare hungry cancel bounce";
-
-const printBalance = async () => {
-
-};
 
 (async () => {
     const deployer = await ethers.getNamedSigner("deployer");
