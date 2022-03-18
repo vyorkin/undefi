@@ -9,8 +9,6 @@ import {
   whales,
   getBalance,
   toUnit,
-  fromUnit,
-  getERC20Balance,
 } from "../utils";
 
 describe("Forking", () => {
@@ -50,55 +48,9 @@ describe("Forking", () => {
 
     const wethBalance = await getBalance(wethWhale.address, "WETH", 18);
     console.log("%s : %s", wethWhale.address, wethBalance);
-
     const wbtcBalance = await getBalance(wbtcWhale.address, "WBTC", 8);
     console.log("%s : %s", wbtcWhale.address, wbtcBalance);
-
     const daiBalance = await getBalance(daiWhale.address, "DAI", 18);
     console.log("%s : %s", daiWhale.address, daiBalance);
-  });
-
-  it("gets output amount", async () => {
-    const amount = await tryUniswap
-      .connect(wbtcWhale)
-      .getAmountOutMin(wbtc.address, dai.address, toUnit(1, 8));
-
-    const amountDai = fromUnit(amount, 18);
-    console.log("%s WBTC ~> %s DAI", "1", amountDai);
-  });
-
-  it("transfers WBTC", async () => {
-    const { deployer, user } = await ethers.getNamedSigners();
-    const balanceBefore = await getERC20Balance(wbtc, user.address, "WBTC", 8);
-    console.log("🚀 ~ balanceBefore", balanceBefore);
-    const tx = await wbtc
-      .connect(deployer)
-      .transferFrom(wbtcWhale.address, user.address, toUnit(1, 8));
-
-    await tx.wait();
-    const balanceAfter = await getERC20Balance(wbtc, user.address, "WBTC", 8);
-    console.log("🚀 ~ balanceAfter", balanceAfter);
-  });
-
-  it("swaps WBTC for DAI", async () => {
-    const user = await ethers.getNamedSigner("user");
-
-    const balanceBefore = await getERC20Balance(dai, user.address, "DAI", 18);
-    console.log("🚀 ~ balanceBefore", balanceBefore);
-
-    const tx = await tryUniswap
-      .connect(wbtcWhale)
-      .swap(
-        wbtc.address,
-        dai.address,
-        toUnit(1, 8),
-        toUnit(40000, 18),
-        user.address
-      );
-
-    await tx.wait();
-
-    const balanceAfter = await getERC20Balance(dai, user.address, "DAI", 18);
-    console.log("🚀 ~ balanceAfter", balanceAfter);
   });
 });
