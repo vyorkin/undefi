@@ -34,13 +34,6 @@ describe("Forking", () => {
     wethWhale = await impersonateSigner(whales.WETH_WHALE);
     wbtcWhale = await impersonateSigner(whales.WBTC_WHALE);
     daiWhale = await impersonateSigner(whales.DAI_WHALE);
-
-    const deployer = await ethers.getNamedSigner("deployer");
-
-    await weth.connect(wethWhale).approve(tryUniswap.address, toUnit(4, 18));
-    await wbtc.connect(wbtcWhale).approve(tryUniswap.address, toUnit(1000, 8));
-    await wbtc.connect(wbtcWhale).approve(deployer.address, toUnit(10, 8));
-    await dai.connect(daiWhale).approve(tryUniswap.address, toUnit(1000));
   });
 
   it("interacts with the forked mainnet", async () => {
