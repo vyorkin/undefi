@@ -2,7 +2,8 @@ import { ethers, network } from "hardhat";
 
 const { ROPSTEN_URL, ACCOUNT2_ADDRESS } = process.env;
 
-const MNEMONIC = "curious tuition pig century panic believe item more warfare hungry cancel bounce";
+const MNEMONIC =
+  "curious tuition pig century panic believe item more warfare hungry cancel bounce";
 
 (async () => {
   // explicit network (ignores the "--network" hardhat flag)
