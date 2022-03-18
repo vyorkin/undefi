@@ -13,22 +13,16 @@ import {
   getERC20Balance,
 } from "../utils";
 
-const TRY_UNISWAP_ADDRESS = "0x986aaa537b8cc170761FDAC6aC4fc7F9d8a20A8";
-
 describe("Forking", () => {
   let tryUniswap: TryUniswap;
 
   let weth: IERC20;
   let wbtc: IERC20;
-  let usdt: IERC20;
-  let usdc: IERC20;
   let dai: IERC20;
 
   let wethWhale: SignerWithAddress;
   let wbtcWhale: SignerWithAddress;
   let daiWhale: SignerWithAddress;
-  let usdtWhale: SignerWithAddress;
-  let usdcWhale: SignerWithAddress;
 
   beforeEach(async () => {
     await deployments.fixture(["Uniswap"]);
@@ -76,30 +70,21 @@ describe("Forking", () => {
   it("transfers WBTC", async () => {
     const { deployer, user } = await ethers.getNamedSigners();
     const balanceBefore = await getERC20Balance(wbtc, user.address, "WBTC", 8);
-    console.log(
-      "🚀 ~ file: Forking.test.ts ~ line 78 ~ it ~ balanceBefore",
-      balanceBefore
-    );
+    console.log("🚀 ~ balanceBefore", balanceBefore);
     const tx = await wbtc
       .connect(deployer)
       .transferFrom(wbtcWhale.address, user.address, toUnit(1, 8));
 
     await tx.wait();
     const balanceAfter = await getERC20Balance(wbtc, user.address, "WBTC", 8);
-    console.log(
-      "🚀 ~ file: Forking.test.ts ~ line 85 ~ it ~ balanceAfter",
-      balanceAfter
-    );
+    console.log("🚀 ~ balanceAfter", balanceAfter);
   });
 
   it("swaps WBTC for DAI", async () => {
     const user = await ethers.getNamedSigner("user");
 
     const balanceBefore = await getERC20Balance(dai, user.address, "DAI", 18);
-    console.log(
-      "🚀 ~ file: Forking.test.ts ~ line 77 ~ it ~ balanceBefore",
-      balanceBefore
-    );
+    console.log("🚀 ~ balanceBefore", balanceBefore);
 
     const tx = await tryUniswap
       .connect(wbtcWhale)
@@ -114,9 +99,6 @@ describe("Forking", () => {
     await tx.wait();
 
     const balanceAfter = await getERC20Balance(dai, user.address, "DAI", 18);
-    console.log(
-      "🚀 ~ file: Forking.test.ts ~ line 93 ~ it ~ balanceAfter",
-      balanceAfter
-    );
+    console.log("🚀 ~ balanceAfter", balanceAfter);
   });
 });
