@@ -10,15 +10,19 @@ import {
   toUnit,
   fromUnit,
   getERC20Balance,
+  getBalance,
+  toWei,
 } from "../../utils";
 
 describe("UniswapV2", () => {
   let tryUniswap: TryUniswap;
 
   let wbtc: IERC20;
+  let weth: IERC20;
   let dai: IERC20;
 
   let wbtcWhale: SignerWithAddress;
+  let wethWhale: SignerWithAddress;
   let daiWhale: SignerWithAddress;
 
   beforeEach(async () => {
@@ -27,14 +31,15 @@ describe("UniswapV2", () => {
     tryUniswap = await ethers.getContract("TryUniswap");
 
     wbtc = await getIERC20(tokens.WBTC);
+    weth = await getIERC20(tokens.WETH);
     dai = await getIERC20(tokens.DAI);
 
     wbtcWhale = await impersonateSigner(whales.WBTC_WHALE);
+    wethWhale = await impersonateSigner(whales.WETH_WHALE);
     daiWhale = await impersonateSigner(whales.DAI_WHALE);
 
-    const deployer = await ethers.getNamedSigner("deployer");
-
     await wbtc.connect(wbtcWhale).approve(tryUniswap.address, toUnit(1000, 8));
+    await weth.connect(wethWhale).approve(tryUniswap.address, toUnit(1000));
     await dai.connect(daiWhale).approve(tryUniswap.address, toUnit(1000));
   });
 
@@ -81,5 +86,42 @@ describe("UniswapV2", () => {
 
     const balanceAfter = await getERC20Balance(dai, user.address, "DAI", 18);
     console.log("🚀 ~ balanceAfter", balanceAfter);
+  });
+
+  describe("liquidity", () => {
+    beforeEach(async () => {
+      const { deployer, user } = await ethers.getNamedSigners();
+      await deployer.sendTransaction({ to: user.address, value: toWei(100) });
+      await weth.connect(wethWhale).transfer(user.address, toUnit(100));
+      await dai.connect(daiWhale).transfer(user.address, toUnit(100));
+    });
+
+    it("adds and removes liquidity", async () => {
+      async function printLogs() {
+        const logEvent = tryUniswap.filters.Log(null, null);
+        const events = await tryUniswap.queryFilter(logEvent);
+        for (const e of events) {
+          console.log(`${e.args.message}: ${fromUnit(e.args.val)}`);
+        }
+      }
+
+      const user = await ethers.getNamedSigner("user");
+      const ethBalance = await getBalance(user.address, "ETH");
+      console.log("🚀 ~ ethBalance", ethBalance);
+      const wethBalance = await getERC20Balance(weth, user.address, "WETH");
+      console.log("🚀 ~ wethBalance", wethBalance);
+      const daiBalance = await getERC20Balance(dai, user.address, "DAI");
+      console.log("🚀 ~ daiBalance", daiBalance);
+
+      await weth.connect(user).approve(tryUniswap.address, toUnit(20));
+      await dai.connect(user).approve(tryUniswap.address, toUnit(20));
+
+      await tryUniswap
+        .connect(user)
+        .addLiquidity(weth.address, dai.address, toUnit(10), toUnit(10));
+      await printLogs();
+      await tryUniswap.connect(user).removeLiquidity(weth.address, dai.address);
+      await printLogs();
+    });
   });
 });
