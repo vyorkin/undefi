@@ -13,7 +13,7 @@
     "test": "npx hardhat test",
     "coverage": "npx hardhat coverage",
     "accounts": "npx hardhat accounts",
-    "postinstall": "husky install"
+    "postinstall": "husky install && yarn build"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
