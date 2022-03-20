@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomiclabs/hardhat-vyper";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
@@ -23,6 +24,7 @@ const {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
+  vyper: "0.3.1",
   networks: {
     hardhat: {
       forking: {
