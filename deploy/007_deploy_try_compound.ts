@@ -1,5 +1,6 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { tokens } from "../utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {
@@ -8,8 +9,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("TryUniswap", { from: deployer, log: true });
+  await deploy("TryCompound", {
+    from: deployer,
+    args: [tokens.WBTC, tokens.CWBTC],
+    log: true,
+  });
 };
 
 export default func;
-func.tags = ["Uniswap"];
+func.tags = ["Compound"];

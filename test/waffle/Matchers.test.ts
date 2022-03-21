@@ -1,8 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { Wallet } from "ethers";
 import { deployments, ethers } from "hardhat";
-import { IERC20, TrySolidity1 } from "../typechain";
+import { IERC20, TrySolidity1 } from "../../typechain";
 import {
   getERC20Balance,
   getIERC20,
@@ -10,7 +9,7 @@ import {
   tokens,
   toUnit,
   whales,
-} from "../utils";
+} from "../../utils";
 
 describe("Matchers", () => {
   let weth: IERC20;

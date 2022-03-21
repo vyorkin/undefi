@@ -9,6 +9,8 @@ import "@typechain/hardhat";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "hardhat-gas-reporter";
+import "hardhat-tracer";
+import "@tenderly/hardhat-tenderly";
 import "solidity-coverage";
 
 dotenv.config();
@@ -46,6 +48,10 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY,
+  },
+  tenderly: {
+    project: "Project",
+    username: "vyorkin",
   },
   namedAccounts: {
     deployer: 0,

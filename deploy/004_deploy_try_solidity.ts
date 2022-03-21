@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("TrySolidity1", { from: deployer });
+  await deploy("TrySolidity1", { from: deployer, log: true });
   // await deploy("TrySolidity2", { from: deployer });
   // await deploy("TrySolidity3", { from: deployer });
   // await deploy("TrySolidity4", { from: deployer });

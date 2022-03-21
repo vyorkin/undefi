@@ -1,5 +1,4 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect } from "chai";
 import { ethers, deployments } from "hardhat";
 import { IERC20, TryUniswap } from "../../typechain";
 import {
@@ -26,7 +25,7 @@ describe("UniswapV2", () => {
   let daiWhale: SignerWithAddress;
 
   beforeEach(async () => {
-    await deployments.fixture(["Uniswap"]);
+    await deployments.fixture("Uniswap");
 
     tryUniswap = await ethers.getContract("TryUniswap");
 
