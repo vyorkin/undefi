@@ -19,11 +19,17 @@ interface CERC20 {
 
     function redeem(uint256 redeemTokens) external returns (uint256);
 
-    function borrow(uint256 borrowAmount) external returns (uint256);
-
     function balanceOfUnderlying(address owner) external returns (uint256);
 
     function exchangeRateCurrent() external returns (uint256);
 
     function supplyRatePerBlock() external view returns (uint256);
+
+    function borrow(uint256 borrowAmount) external returns (uint256);
+
+    function borrowBalanceCurrent(address account) external returns (uint256);
+
+    function repayBorrow(uint256 repayAmount) external returns (uint256);
+
+    function borrowRatePerBlock() external view returns (uint256);
 }

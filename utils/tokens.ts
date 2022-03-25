@@ -1,5 +1,6 @@
+import { Contract } from "ethers";
 import { deployments, ethers } from "hardhat";
-import { IERC20 } from "../typechain";
+import { CERC20, IERC20 } from "../typechain";
 
 export const DAI = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 export const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
@@ -14,7 +15,16 @@ export const CUSDC = "0x39AA39c021dfbaE8faC545936693aC917d5E7563";
 export const CWBTC = "0xccF4429DB6322D5C611ee964527D42E5d685DD6a";
 export const CETH = "0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5";
 
-export const getIERC20 = async (address: string) => {
-  const artifact = await deployments.getArtifact("IERC20");
-  return await ethers.getContractAt<IERC20>(artifact.abi, address);
+export const getIERC20 = async (address: string) =>
+  getContractAt<IERC20>(address, "IERC20");
+
+export const getCERC20 = async (address: string) =>
+  getContractAt<CERC20>(address, "CERC20");
+
+export const getContractAt = async <T extends Contract>(
+  address: string,
+  name: string
+) => {
+  const artifact = await deployments.getArtifact(name);
+  return await ethers.getContractAt<T>(artifact.abi, address);
 };

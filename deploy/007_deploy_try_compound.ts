@@ -11,7 +11,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await deploy("TryCompound", {
     from: deployer,
-    args: [tokens.WBTC, tokens.CWBTC],
     log: true,
   });
 };
