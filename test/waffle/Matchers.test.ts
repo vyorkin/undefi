@@ -2,71 +2,62 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { deployments, ethers } from "hardhat";
 import { IERC20, TrySolidity1 } from "../../typechain";
-import {
-  getERC20Balance,
-  getIERC20,
-  impersonateSigner,
-  tokens,
-  toUnit,
-  whales,
-} from "../../utils";
+import { getERC20Balance, toUnit } from "../../utils";
+import { getTokens, ITokens } from "../../utils/tokens";
+import { getWhales, IWhales } from "../../utils/whales";
 
 describe("Matchers", () => {
-  let weth: IERC20;
-  let wethWhale: SignerWithAddress;
-
-  let dai: IERC20;
-  let daiWhale: SignerWithAddress;
+  let tokens: ITokens;
+  let whales: IWhales;
 
   let signers: Record<string, SignerWithAddress>;
 
   beforeEach(async () => {
     await deployments.fixture(["TrySolidity"]);
-
-    weth = await getIERC20(tokens.WETH);
-    wethWhale = await impersonateSigner(whales.WETH_WHALE);
-
-    dai = await getIERC20(tokens.DAI);
-    daiWhale = await impersonateSigner(whales.DAI_WHALE);
-
+    tokens = await getTokens();
+    whales = await getWhales();
     signers = await ethers.getNamedSigners();
   });
 
   describe("Emtting events", () => {
     it("emits Transfer event", async () => {
       const amount = toUnit(10, 8);
-      await expect(dai.connect(daiWhale).transfer(signers.user.address, amount))
-        .to.emit(dai, "Transfer")
-        .withArgs(daiWhale.address, signers.user.address, amount);
+      await expect(
+        tokens.dai.connect(whales.dai).transfer(signers.user.address, amount)
+      )
+        .to.emit(tokens.dai, "Transfer")
+        .withArgs(whales.dai.address, signers.user.address, amount);
     });
   });
 
   // Waffle's calledOnContract is not supported by Hardhat
   describe.skip("Called on contract", () => {
     it("works", async () => {
-      await getERC20Balance(dai, daiWhale.address, "DAI");
-      expect("balanceOf").to.be.calledOnContract(dai);
+      await getERC20Balance(tokens.dai, whales.dai.address, "DAI");
+      expect("balanceOf").to.be.calledOnContract(tokens.dai);
     });
   });
 
   describe("Revert", () => {
     it("works", async () => {
       const balance = await getERC20Balance(
-        weth,
-        wethWhale.address,
+        tokens.weth,
+        whales.weth.address,
         "WETH",
         18
       );
 
-      console.log("%s: %s", wethWhale.address, balance);
+      console.log("%s: %s", whales.weth.address, balance);
 
       await expect(
-        weth.connect(wethWhale).transfer(signers.user.address, toUnit(1, 18))
+        tokens.weth
+          .connect(whales.weth)
+          .transfer(signers.user.address, toUnit(1, 18))
       ).not.to.be.reverted;
 
       await expect(
-        weth
-          .connect(wethWhale)
+        tokens.weth
+          .connect(whales.weth)
           .transfer(signers.user.address, toUnit(15000, 18))
       ).to.be.reverted;
 
@@ -107,14 +98,14 @@ describe("Matchers", () => {
   describe("Change token balance", () => {
     it("works", async () => {
       await expect(() =>
-        weth.connect(wethWhale).transfer(signers.user.address, 200)
-      ).to.changeTokenBalance(weth, signers.user, 200);
+        tokens.weth.connect(whales.weth).transfer(signers.user.address, 200)
+      ).to.changeTokenBalance(tokens.weth, signers.user, 200);
 
       await expect(() =>
-        weth
-          .connect(wethWhale)
-          .transferFrom(wethWhale.address, signers.user.address, 200)
-      ).to.changeTokenBalance(weth, signers.user, 200);
+        tokens.weth
+          .connect(whales.weth)
+          .transferFrom(whales.weth.address, signers.user.address, 200)
+      ).to.changeTokenBalance(tokens.weth, signers.user, 200);
     });
   });
 });

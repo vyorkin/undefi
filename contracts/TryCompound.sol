@@ -28,24 +28,24 @@ contract TryCompound {
         returns (uint256 exchangeRate, uint256 supplyRate)
     {
         // Exchange rate from cToken to underlying
+        // exchangeRate = (getCash() + totalBorrows() - totalReserves()) / totalSupply()
         exchangeRate = _cToken.exchangeRateCurrent();
         // Interest rate for supplying:
         // Amount added to your supply balance per block
         supplyRate = _cToken.supplyRatePerBlock();
     }
 
-    function estimateBalanceOfUnderlying(CERC20 _cToken)
-        external
-        returns (uint256)
-    {
+    function estimateBalanceOfUnderlying(
+        CERC20 _cToken,
+        uint256 _decimals,
+        uint256 _cTokenDecimals
+    ) external returns (uint256) {
         uint256 cTokenBalance = _cToken.balanceOf(address(this));
         uint256 exchangeRate = _cToken.exchangeRateCurrent();
-        uint256 decimals = 8; // WBTC
-        uint256 cTokenDecimals = 8;
 
         return
             (cTokenBalance * exchangeRate) /
-            10**(18 + decimals - cTokenDecimals);
+            10**(18 + _decimals - _cTokenDecimals);
     }
 
     // The user's underlying balance, representing their assets in the protocol,
@@ -98,7 +98,11 @@ contract TryCompound {
     }
 
     // enter market and borrow
-    function borrow(CERC20 _cToken, uint256 _decimals) external {
+    function borrow(
+        CERC20 _cToken,
+        CERC20 _cTokenToBorrow,
+        uint256 _decimals
+    ) external {
         // enter the supply market so you can borrow another type of asset
         address[] memory cTokens = new address[](1);
         cTokens[0] = address(_cToken);
@@ -113,14 +117,16 @@ contract TryCompound {
         require(liquidity > 0, "liquidity = 0");
 
         // most recent price for a token in USD (18 decimals precision)
-        uint256 price = priceOracle.getUnderlyingPrice(cTokens[0]);
+        uint256 price = priceOracle.getUnderlyingPrice(
+            address(_cTokenToBorrow)
+        );
 
         // _decimals - decimals of token to borrow
         uint256 maxBorrow = (liquidity * (10**_decimals)) / price;
         require(maxBorrow > 0, "max borrow = 0");
         // borrow 50%
         uint256 amount = (maxBorrow * 50) / 100;
-        require(_cToken.borrow(amount) == 0, "borrow failed");
+        require(_cTokenToBorrow.borrow(amount) == 0, "borrow failed");
     }
 
     // the user's current borrow balance (with interest) in
