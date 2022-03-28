@@ -8,7 +8,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("TryUniswap", { from: deployer, log: true });
+  await deploy("TryUniswapV2", { from: deployer, log: true });
+  await deploy("TryUniswapV3", { from: deployer, log: true });
 };
 
 export default func;

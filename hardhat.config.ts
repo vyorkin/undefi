@@ -19,18 +19,34 @@ const {
   ROPSTEN_URL,
   RINKEBY_URL,
   MAINNET_URL,
+  OPTIMISM_MAINNET_URL,
+  OPTIMISM_KOVAN_URL,
+  ARBITRUM_MAINNET_URL,
+  ARBITRUM_RINKEBY_URL,
+  POLYGON_MUMBAI_URL,
+  POLYGON_MAINNET_URL,
   ACCOUNT1_ADDRESS,
   ACCOUNT1_PRIVATE_KEY,
   ETHERSCAN_API_KEY,
 } = process.env;
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.10",
+      },
+      {
+        version: "0.6.12",
+      },
+    ],
+  },
   vyper: "0.3.1",
   networks: {
     hardhat: {
       forking: {
         url: MAINNET_URL!,
+        blockNumber: 14473588,
       },
     },
     ropsten: {
@@ -39,6 +55,18 @@ const config: HardhatUserConfig = {
     },
     rinkeby: {
       url: RINKEBY_URL!,
+      accounts: [ACCOUNT1_PRIVATE_KEY!],
+    },
+    optimism_kovan: {
+      url: OPTIMISM_KOVAN_URL!,
+      accounts: [ACCOUNT1_PRIVATE_KEY!],
+    },
+    arbitrum_rinkeby: {
+      url: ARBITRUM_RINKEBY_URL!,
+      accounts: [ACCOUNT1_PRIVATE_KEY!],
+    },
+    polygon_mumbai: {
+      url: POLYGON_MUMBAI_URL!,
       accounts: [ACCOUNT1_PRIVATE_KEY!],
     },
   },

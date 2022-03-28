@@ -7,8 +7,6 @@ import "./interfaces/compound/Comptroller.sol";
 import "./interfaces/compound/PriceOracle.sol";
 
 contract TryCompound {
-    event Log(string message, uint256 val);
-
     function supply(
         IERC20 _token,
         CERC20 _cToken,

@@ -62,7 +62,7 @@ describe("Matchers", () => {
       ).to.be.reverted;
 
       const sol1: TrySolidity1 = await ethers.getContract("TrySolidity1");
-      await expect(sol1.foo()).to.be.revertedWith("fucked up");
+      await expect(sol1.testRevert()).to.be.revertedWith("fucked up");
     });
   });
 

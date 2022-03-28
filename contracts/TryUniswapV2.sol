@@ -5,9 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router01.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Callee.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "hardhat/console.sol";
 
-contract TryUniswap {
+contract TryUniswapV2 is IUniswapV2Callee {
     address private constant UNISWAP_V2_ROUTER =
         0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
     address private constant UNISWAP_V2_FACTORY =
@@ -124,5 +126,54 @@ contract TryUniswap {
             .getAmountsOut(_amountIn, path);
 
         return amountOutMins[path.length - 1];
+    }
+
+    function flashSwap(address _tokenToBorrow, uint256 _amount) external {
+        address pair = IUniswapV2Factory(UNISWAP_V2_FACTORY).getPair(
+            _tokenToBorrow,
+            WETH
+        );
+        require(pair != address(0), "pair not exist");
+        address token0 = IUniswapV2Pair(pair).token0();
+        address token1 = IUniswapV2Pair(pair).token1();
+        uint256 amount0Out = _tokenToBorrow == token0 ? _amount : 0;
+        uint256 amount1Out = _tokenToBorrow == token1 ? _amount : 0;
+
+        // data not empty means we want a flash loan, not a regular swap
+        bytes memory data = abi.encode(_tokenToBorrow, _amount);
+        IUniswapV2Pair(pair).swap(amount0Out, amount1Out, address(this), data);
+    }
+
+    function uniswapV2Call(
+        address _sender,
+        uint256 _amount0,
+        uint256 _amount1,
+        bytes calldata _data
+    ) external override {
+        address token0 = IUniswapV2Pair(msg.sender).token0();
+        address token1 = IUniswapV2Pair(msg.sender).token1();
+        address pair = IUniswapV2Factory(UNISWAP_V2_FACTORY).getPair(
+            token0,
+            token1
+        );
+        require(msg.sender == pair, "pair not found");
+        require(_sender == address(this), "invalid sender");
+
+        (address tokenToBorrow, uint256 amount) = abi.decode(
+            _data,
+            (address, uint256)
+        );
+
+        // 3% fee, formula from UniswapV2 docs
+        uint256 fee = ((amount * 3) / 997) + 1;
+        uint256 amountToRepay = amount + fee;
+
+        emit Log("amount", amount);
+        emit Log("amount0", _amount0);
+        emit Log("amount1", _amount1);
+        emit Log("fee", fee);
+        emit Log("amount to repay", amountToRepay);
+
+        IERC20(tokenToBorrow).transfer(pair, amountToRepay);
     }
 }

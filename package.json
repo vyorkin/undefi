@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@aave/core-v3": "^1.13.1",
+    "@aave/protocol-js": "^4.3.0",
+    "@aave/protocol-v2": "^1.0.1",
     "@compound-finance/compound-js": "^0.4.4",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@nomiclabs/hardhat-etherscan": "^3.0.3",

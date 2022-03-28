@@ -16,8 +16,10 @@ export const CUSDT = "0xf650C3d88D12dB855b8bf7D11Be6C55A4e07dCC9";
 export const CWBTC = "0xccF4429DB6322D5C611ee964527D42E5d685DD6a";
 export const CETH = "0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5";
 
-export const getIERC20 = async (address: string) =>
-  getContractAt<IERC20>(address, "IERC20");
+export const getIERC20 = async (address: string) => {
+  const qualifiedName = "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20";
+  return getContractAt<IERC20>(address, qualifiedName);
+};
 
 export const getCERC20 = async (address: string) =>
   getContractAt<CERC20>(address, "CERC20");

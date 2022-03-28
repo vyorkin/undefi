@@ -1,11 +1,11 @@
 import { ethers, deployments } from "hardhat";
-import { TryUniswap } from "../../typechain";
+import { TryUniswapV2 } from "../../typechain";
 import { getBalance } from "../../utils";
 import { getTokens, ITokens } from "../../utils/tokens";
 import { getWhales, IWhales } from "../../utils/whales";
 
 describe("Forking", () => {
-  let tryUniswap: TryUniswap;
+  let tryUniswapV2: TryUniswapV2;
 
   let tokens: ITokens;
   let whales: IWhales;
@@ -13,14 +13,14 @@ describe("Forking", () => {
   beforeEach(async () => {
     await deployments.fixture(["Uniswap"]);
 
-    tryUniswap = await ethers.getContract("TryUniswap");
+    tryUniswapV2 = await ethers.getContract("TryUniswapV2");
 
     tokens = await getTokens();
     whales = await getWhales();
   });
 
   it("interacts with the forked mainnet", async () => {
-    console.log("TryUniswap contract address: ", tryUniswap.address);
+    console.log("TryUniswapV2 contract address: ", tryUniswapV2.address);
 
     const wethBalance = await getBalance(whales.weth.address, "WETH", 18);
     console.log("%s : %s", whales.weth.address, wethBalance);

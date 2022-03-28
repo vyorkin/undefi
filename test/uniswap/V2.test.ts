@@ -1,5 +1,5 @@
 import { ethers, deployments } from "hardhat";
-import { TryUniswap } from "../../typechain";
+import { TryUniswapV2 } from "../../typechain";
 import {
   toUnit,
   fromUnit,
@@ -11,14 +11,14 @@ import { getTokens, ITokens } from "../../utils/tokens";
 import { getWhales, IWhales } from "../../utils/whales";
 
 describe("UniswapV2", () => {
-  let tryUniswap: TryUniswap;
+  let tryUniswap: TryUniswapV2;
   let tokens: ITokens;
   let whales: IWhales;
 
   beforeEach(async () => {
     await deployments.fixture("Uniswap");
 
-    tryUniswap = await ethers.getContract("TryUniswap");
+    tryUniswap = await ethers.getContract("TryUniswapV2");
     tokens = await getTokens();
     whales = await getWhales();
 
@@ -31,6 +31,32 @@ describe("UniswapV2", () => {
     await tokens.dai
       .connect(whales.dai)
       .approve(tryUniswap.address, toUnit(1000));
+  });
+
+  describe("flashswap", () => {
+    it("takes and repays a flash swap", async () => {
+      const ctx = {
+        tokenToBorrow: tokens.usdc,
+        tokenDecimals: 6,
+        whale: whales.usdc,
+        fundAmount: toUnit(2000, 6),
+        borrowAmount: toUnit(1000, 6),
+      };
+
+      // used to repay loan
+      await ctx.tokenToBorrow
+        .connect(ctx.whale)
+        .transfer(tryUniswap.address, ctx.fundAmount);
+
+      await tryUniswap.flashSwap(ctx.tokenToBorrow.address, ctx.borrowAmount);
+
+      const logEvent = tryUniswap.filters.Log(null, null);
+      const events = await tryUniswap.queryFilter(logEvent);
+      for (const e of events) {
+        const amount = fromUnit(e.args.val, ctx.tokenDecimals);
+        console.log(`${e.args.message}: ${amount} USDC`);
+      }
+    });
   });
 
   it("gets output amount", async () => {
