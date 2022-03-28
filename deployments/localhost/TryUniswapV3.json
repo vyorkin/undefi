@@ -1,0 +1,40 @@
+{
+  "address": "0xc582Bc0317dbb0908203541971a358c44b1F3766",
+  "abi": [],
+  "transactionHash": "0x34f94fccab85669dcf7f7fd1ce2cdf0e6c1e348427cde905a175d99685b6a007",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0xc582Bc0317dbb0908203541971a358c44b1F3766",
+    "transactionIndex": 0,
+    "gasUsed": "67066",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x6d0033d400e692d781020f6604e83dbde97e1d387df5d44977ca8f5eb1b74be6",
+    "transactionHash": "0x34f94fccab85669dcf7f7fd1ce2cdf0e6c1e348427cde905a175d99685b6a007",
+    "logs": [],
+    "blockNumber": 14473593,
+    "cumulativeGasUsed": "67066",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "eb08c468ab781e4244e47f48238a9e5d",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/TryUniswapV3.sol\":\"TryUniswapV3\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/TryUniswapV3.sol\":{\"content\":\"//SPDX-License-Identifier: Unlicense\\npragma solidity ^0.8.0;\\n\\ncontract TryUniswapV3 {}\\n\",\"keccak256\":\"0xdea1a91edfe4ea8e4425a357f8b6a1223747f5879b69e9bbcae172e81f562a93\",\"license\":\"Unlicense\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220d22afefd6d15a219544fff313dfc50af55fba11b473e31cf5a643cb74df68bc864736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220d22afefd6d15a219544fff313dfc50af55fba11b473e31cf5a643cb74df68bc864736f6c634300080a0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

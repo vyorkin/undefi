@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/solidity/Payable.sol": {
+      "content": "//SPDX-License-Identifier: Unlicense\npragma solidity ^0.8.0;\n\ncontract Payable {\n    address payable public owner;\n\n    constructor() {\n        owner = payable(msg.sender);\n    }\n\n    function deposit() external payable {}\n\n    function getBalance() external view returns (uint256) {\n        return address(this).balance;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
